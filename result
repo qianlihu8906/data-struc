@@ -1,0 +1,36 @@
+list
+
+ 43.05      0.03     0.03  1000001     0.00     0.00  student_create
+ 28.70      0.05     0.02        1    20.09    20.09  student_find_by_id
+ 14.35      0.06     0.01  1000001     0.00     0.00  __list_add
+ 14.35      0.07     0.01                             main
+  0.00      0.07     0.00  1000001     0.00     0.00  list_add
+  0.00      0.07     0.00        1     0.00     0.00  INIT_LIST_HEAD
+  0.00      0.07     0.00        1     0.00     0.00  listen
+  0.00      0.07     0.00        1     0.00     0.00  student_get_id
+  0.00      0.07     0.00        1     0.00     0.00  student_get_name
+  0.00      0.07     0.00        1     0.00     0.00  student_init
+  0.00      0.07     0.00        1     0.00     0.00  student_listen
+
+rbtree 
+ 86.07      1.59     1.59  1000001     1.59     1.77  _insert
+  5.95      1.70     0.11   999753     0.11     0.17  __rb_insert
+  3.25      1.76     0.06  1000001     0.06     1.83  student_create
+  1.62      1.79     0.03  2275858     0.01     0.01  rb_set_parent_color
+  1.08      1.81     0.02  1901234     0.01     0.01  rb_red_parent
+  1.08      1.83     0.02                             main
+  0.54      1.84     0.01   999753     0.01     0.01  rb_link_node
+  0.54      1.85     0.01   388335     0.03     0.03  __rb_change_child
+  0.00      1.85     0.00   999753     0.00     0.17  rb_insert_color
+  0.00      1.85     0.00   582248     0.00     0.00  dummy_rotate
+  0.00      1.85     0.00   388335     0.00     0.04  __rb_rotate_set_parents
+  0.00      1.85     0.00        1     0.00     0.00  listen
+  0.00      1.85     0.00        1     0.00     0.00  student_find_by_id
+  0.00      1.85     0.00        1     0.00     0.00  student_get_id
+  0.00      1.85     0.00        1     0.00     0.00  student_get_name
+  0.00      1.85     0.00        1     0.00     0.00  student_init
+  0.00      1.85     0.00        1     0.00     0.00  student_listen
+
+gprof ./a.out gmon.out -p
+./a.out 1000000
+gcc student_rbtree.c rbtree.c  test.c -pg 
