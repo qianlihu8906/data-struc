@@ -80,7 +80,7 @@ hlist_add_head(node->node,h);
 ###算法复杂度
 rbtree的添加、删除、查找复杂度均为O(logn)。
 ###实现
-需要拷贝出 include/linux/rbtree.h include/linux/rbtree_augmented.h lib/rbtree.c 文件。删除掉rbtree.c包含的头文件，增加stddef头文件，去掉EXPORT_SYMBOLE。
+需要拷贝出 include/linux/rbtree.h include/linux/rbtree_augmented.h lib/rbtree.c 文件。删除掉rbtree.c包含的头文件，增加stddef头文件，去掉EXPORT_SYMBOLE。[详解Linux内核红黑树算法的实现](http://blog.csdn.net/npy_lp/article/details/7420689)和[手把手实现红黑树](http://blog.csdn.net/chen19870707/article/details/39585277)两篇文章详细说明了其实现
 ###接口API
 ```c
 #define RB_ROOT	(struct rb_root) { NULL, }
@@ -138,7 +138,7 @@ static int insert(struct node *node){
 参考代码 slab.c
 
 ###封装性
-c语言可以实现面向对象编程范式，在student.h头文件中，只是做了struct student的extern声明，并没有其定义，这样的话，其引用者，student_test.c便不能看到其内部定义，这样便实现了类的私有化。很多C语言实现利用了这种技巧。但是这样也有一个不足之处，我们的sudent_create函数返回值仍然是一个指针，很难保证引用者不利用其做加减运算，进而破坏我们的模块代码。为了解决这个问题，引入了id到指针的映射结构，linux中为idr，但是idr的实现主要需要考虑并发，这里我们参考其实现思路，实现了另外一个线程安全的用户空间的idr。代码来自于[云风的blog]（http://blog.codingnow.com/2015/04/handlemap.html）。  
+c语言可以实现面向对象编程范式，在student.h头文件中，只是做了struct student的extern声明，并没有其定义，这样的话，其引用者，student_test.c便不能看到其内部定义，这样便实现了类的私有化。很多C语言实现利用了这种技巧。但是这样也有一个不足之处，我们的sudent_create函数返回值仍然是一个指针，很难保证引用者不利用其做加减运算，进而破坏我们的模块代码。为了解决这个问题，引入了id到指针的映射结构，linux中为idr，但是idr的实现主要需要考虑并发，这里我们参考其实现思路，实现了另外一个线程安全的用户空间的idr。代码来自于[云风的blog](http://blog.codingnow.com/2015/04/handlemap.html)。  
 ####对比
 *student.h*
 ```c
