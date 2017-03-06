@@ -21,7 +21,7 @@
 #include "list.h"
 #include "student.h"
 
-#define HASH_SIZE	1024
+#define HASH_SIZE	10
 static struct hlist_head *H = NULL;
 
 struct student{

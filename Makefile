@@ -2,7 +2,7 @@
 all:list_test hlist_test rbtree_test slab_test fifo_test
 
 list_test:
-	cc -Wall student_list.c student_test.c -o student_list_test -pg
+	cc -Wall student_list.c student_test.c -o student_list_test -pg -std=gnu99
 
 hlist_test:
 	cc -Wall student_hlist.c student_test.c -o student_hlist_test -pg

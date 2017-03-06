@@ -16,14 +16,15 @@
 
 #ifndef STUDENT_HANDLEMAP_H__
 #define STUDENT_HANDLEMAP_H__
+#include <stddef.h>
 #include "handlemap.h"
-#include "student.h"
 
-void student_handlemap_init();
-handleid student_handlemap_create(int id,const char *name,listen_func_t listen);
-void student_handlemap_release(handleid id);
-const char *student_handlemap_get_name(handleid id);
-int student_handlemap_get_id(handleid id);
-int student_handlemap_listen(handleid id,const char *cls);
-handleid student_handlemap_find_by_id(int id);
+typedef int (*listen)(handleid id,const char *class);
+
+void student_init();
+handleid student_new(const char *name,listen func);
+void student_release(handleid id);
+int student_get_name(handleid id,char *buffer,size_t size);
+int student_listen(handleid id,const char *class);
+
 #endif

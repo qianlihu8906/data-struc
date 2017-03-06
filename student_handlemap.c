@@ -15,61 +15,99 @@
  */
 
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include "handlemap.h"
-#include "student.h"
+#include "student_handlemap.h"
 
+struct student;
 struct handlemap *H = NULL;
 
-void student_handlemap_init()
+struct student{
+	handleid id;
+	char *name;
+	listen listen;
+};
+
+void student_init()
 {
 	H = handlemap_init();
+	assert(H != NULL);
 }
 
-handleid student_handlemap_create(int id,const char *name,listen_func_t listen)
+handleid student_new(const char *name,listen func)
 {
-	struct student *s = student_create(id,name,listen);
-	return handlemap_new(H,s);	
+	struct student *s = malloc(sizeof(*s));
+	printf("student alloc s=%p\n",s);
+	assert(s != NULL);
+
+	s->id = handlemap_new(H,s);
+	s->name = strdup(name);
+	assert(s->name != NULL);
+
+	s->listen = func;
+
+	return s->id;
 }
-void student_handlemap_release(handleid id)
+
+static struct student *student_grab(handleid id)
 {
-	struct student *s = handlemap_grab(H,id);
-	if( handlemap_release(H,id) != NULL){
-		student_release(s);
+	return handlemap_grab(H,id);
+	
+}
+
+void student_release(handleid id)
+{
+	struct student *s = handlemap_release(H,id);
+	if(s){
+		printf("student free s=%p\n",s);
+		free(s->name);
+		free(s);
 	}
 }
 
-const char *student_handlemap_get_name(handleid id)
+int student_get_name(handleid id,char *buffer,size_t size)
 {
-	struct student *s = handlemap_grab(H,id);
-	const char *name = student_get_name(s);
-	handlemap_release(H,id);
-	return name;
-}
-int student_handlemap_get_id(handleid id)
-{
-	struct student *s = handlemap_grab(H,id);
-	int sid = student_get_id(s);
-	handlemap_release(H,id);
-	return sid;
+	struct student *s = student_grab(id);
+	if(s == NULL)
+		return -1;
+	strncpy(buffer,s->name,size);	
+	student_release(id);
 
-}
-int student_handlemap_listen(handleid id,const char *cls)
-{
-	struct student *s = handlemap_grab(H,id);
-	int res = student_listen(s,cls);
-	handlemap_release(H,id);
-	return res;
-}
-
-//TODO  
-handleid student_handlemap_find_by_id(int id)
-{
-	(void)id;
 	return 0;
 }
-# if 0
+
+int student_listen(handleid id,const char *class)
+{
+	struct student *s = student_grab(id);
+	if(s == NULL)
+		return -1;
+
+	int r = s->listen(id,class);
+
+	student_release(id);
+
+	return r;
+}
+
+static int listen_func(handleid id,const char *class)
+{
+	char name[256];
+	student_get_name(id,name,sizeof(name));
+
+	printf("student(%s) listen %s\n",name,class);
+
+	return 0;
+}
+
+
 int main()
 {
+	student_init();
+
+	handleid id = student_new("john",listen_func);
+	student_listen(id,"english");
+	student_release(id);
 }
-#endif 
